@@ -1,47 +1,36 @@
 package com.javaparams.api;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
-
 import com.javaparams.domain.Parameter;
 import com.javaparams.repo.ParameterRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/params")
 public class ParameterAPI {
 
-    @Autowired
-    private ParameterRepository repository;
+	private final ParameterRepository parameterRepository;
 
-    @GetMapping("/list")
-    public List<Parameter> getAll() {
-        return repository.findAll();
-    }
+	public ParameterAPI(ParameterRepository parameterRepository) {
+		this.parameterRepository = parameterRepository;
+	}
 
-    @GetMapping("/{id}")
-    public Parameter getParameter(@PathVariable Long id) {
-
-        Optional<Parameter> parameterOpt = repository.findById(id);
-        if (parameterOpt.isPresent()) {
-            return parameterOpt.get();
-        } else {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
-        }
-    }
-
-    @PostMapping("/")
-    public Parameter newParameter(@RequestBody Parameter newParameter) {
-        return newParameter;
-    }
+	@GetMapping("/api/parameter/find")
+	public List<Parameter> findAll() {
+		return parameterRepository.findAll(PageRequest.of(0, 100)).getContent();
+	}
+	
+	@GetMapping("/api/parameter/top")
+	public List<Parameter> findTop12() {
+		return parameterRepository.findTop12ByOrderByTotalLikesDesc();
+	}
+	
+	@GetMapping("/api/parameter/likes")
+	public List<Parameter> findWithLikes() {
+		return parameterRepository.findByTotalLikesGreaterThan(0);
+	}
+	
 
 }

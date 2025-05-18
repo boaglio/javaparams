@@ -23,11 +23,16 @@ management:
   health:
     db:
       enabled: true
+    defaults:
+      enabled: true
+    diskspace:
+      enabled: true
   endpoint:
     health:
       show-details: always
   endpoints:
     web:
+      base-path: /rest/actuator
       exposure:
         include:
           - health
@@ -38,33 +43,26 @@ management:
 
 spring:
   datasource:
-    url: jdbc:h2:file:./javaparams
+    initialization-mode: always
+    url: jdbc:h2:mem:javaparams-test
     username: sa
     password:
   h2:
     console:
       enable: false
-    jpa:
+  jpa:
     hibernate:
       ddl-auto: none
     show-sql: true
   thymeleaf:
     cache: false
   security:
-   oauth2:
-     client:
-       registration:
-         github:
-           clientId: ${GITHUB_CLIENT_ID}
-           clientSecret: ${GITHUB_CLIENT_SECRET}
-           scope:
-             - read:user
-           redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-       provider:
-         github:
-           authorization-uri: https://github.com/login/oauth/authorize
-           token-uri: https://github.com/login/oauth/access_token
-           user-info-uri: https://api.github.com/user
+    oauth2:
+      client:
+        registration:
+          github:
+            clientId: ${GITHUB_CLIENT_ID}
+            clientSecret: ${GITHUB_CLIENT_SECRET}
 
 # Spring DOC
 springdoc:

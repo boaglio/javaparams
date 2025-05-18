@@ -1,0 +1,10 @@
+INSERT INTO jp_parameter (id, name, description) VALUES (1, '-Xmx', 'Sets the maximum heap size for the JVM.');
+INSERT INTO jp_parameter (id, name, description) VALUES (2, '-Xms', 'Sets the minimum and the initial size (in bytes) of the heap.');
+INSERT INTO jp_parameter (id, name, description) VALUES (3, '-XX:+UseG1GC', 'Enables the G1 garbage collector.');
+INSERT INTO jp_parameter (id, name, description) VALUES (4, '-XX:+UseParallelGC', 'Enables the parallel garbage collector.');
+INSERT INTO jp_parameter (id, name, description) VALUES (5, '-XX:MaxPermSize', 'Sets the maximum size of the permanent generation.');
+INSERT INTO jp_parameter (id, name, description) VALUES (6, '-XX:+PrintGCDetails', 'Prints detailed information about each garbage collection.');
+INSERT INTO jp_parameter (id, name, description) VALUES (7, '-XX:+HeapDumpOnOutOfMemoryError', 'Generates a heap dump when an OutOfMemoryError occurs.');
+INSERT INTO jp_parameter (id, name, description) VALUES (8, '-Dfile.encoding=UTF-8', 'Sets the default file encoding to UTF-8.');
+INSERT INTO jp_parameter (id, name, description) VALUES (9, '-Duser.timezone=UTC', 'Sets the JVM default timezone to UTC.');
+INSERT INTO jp_parameter (id, name, description) VALUES (10, '-XX:NewRatio', 'Sets the ratio between young and old generation sizes.');

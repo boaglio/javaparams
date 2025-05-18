@@ -1,34 +1,68 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
  <title>Java Params</title>
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <link rel="stylesheet" type="text/css"	href="webjars/bootstrap/4.5.2/css/bootstrap.min.css" />
+ <link rel="stylesheet" type="text/css"	href="webjars/bootstrap/5.3.5/css/bootstrap.min.css" />
 </head>
-<body>
+<body class="bg-dark text-light">
  <div class="container">
-  <script type="text/javascript" src="webjars/jquery/3.5.1/jquery.min.js"></script>
-  <script type="text/javascript" src="webjars/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <div class="jumbotron">
-   <h1 class="display-4">
-    Java Parameters
-   </h1>
-   <div class="d-flex justify-content-around">
-    <div class="card" style="width: 18rem;">
-    <div class="card-body">
-     <h5 class="card-title">Swagger</h5>
-     <a href="/swagger-ui/index.html" class="card-link" target="_BLANK">Swagger-UI</a>
+  <script type="text/javascript" src="webjars/jquery/3.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="webjars/bootstrap/5.3.5/js/bootstrap.min.js"></script>
+  <div class="px-4 py-5 my-5 text-center">
+   <h1 class="display-5 fw-bold">Java Parameters</h1>
+   <div class="col-lg-8 mx-auto mt-4">
+    <div class="text-center mt-4 d-flex justify-content-center gap-3">
+     <sec:authorize access="!isAuthenticated()">
+      <a href="/login" class="btn btn-outline-light">GitHub Login</a>
+     </sec:authorize>
+     <a href="https://youtube.com/@DevMultitask" class="btn btn-primary" target="_blank" >YouTube</a>
     </div>
-   </div>
-   <div class="card" style="width: 18rem;">
-    <div class="card-body">
-     <h5 class="card-title">API</h5>
-     <p class="card-text">Params API</p>     
-     <a href="/api/params/list" class="card-link" target="_BLANK">list</a>
+    <div class="text-center mt-4">
+     <p th:if="${name != null}">
+      Welcome <strong th:text="${name}">user</strong>!
+      <a href="/logout" class="btn btn-sm btn-warning ms-2">Logout</a>
+     </p>
     </div>
-   </div>
+    <div class="container mt-4">
+     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+      <div class="col" th:each="parameter : ${params}">
+       <div class="card h-100 text-bg-dark border-secondary">
+        <div class="card-body bg-light text-dark">
+         <h5 class="card-title" th:text="${parameter.name}">-Xms</h5>
+         <p class="card-text" th:text="${parameter.description}">Heap minimum size</p>
+         <button type="button" class="btn btn-light mt-2"
+                 th:id="'likes-' + ${parameter.id}"
+                 th:text="${'❤️ '+ parameter.totalLikes}"
+                 th:disabled="${#authorization.expression('!isAuthenticated()')}"
+                 onclick="like(this)">
+         </button>
+        </div>
+       </div>
+      </div>
+     </div>
+     <div>
+      <a href="/swagger-ui/index.html#/" class="btn btn-primary btn-lg mt-4" target="_blank">OpenAPI / Swagger</a>
+     </div>
+    </div>
    </div>
   </div>
  </div>
 </body>
 </html>
+<script>
+ function like(button) {
+   const id = button.id.replace('likes-', '');
+   $.ajax({
+     url: `/api/parameter/${id}/like`,
+     type: 'POST',
+     success: function(newTotalLikes) {
+       $(button).html(`<span class="ms-2 text-success">❤️ ${newTotalLikes}</span>`);
+     },
+     error: function() {
+       alert("Error");
+     }
+   });
+ }
+</script>
