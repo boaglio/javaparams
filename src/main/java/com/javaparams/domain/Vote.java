@@ -1,79 +1,59 @@
 package com.javaparams.domain;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
- 
+import jakarta.persistence.*;
+
 @Entity
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Table(name = "jp_vote")
 public class Vote {
 
-    @Id
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqVoteGen")
+	@SequenceGenerator(name = "seqVoteGen", sequenceName = "seq_jp_vote", allocationSize = 1)
+	private Long id;
 
-    @ManyToOne
-    private Parameter parameter;
+	private Long parameterId;
 
-    @ManyToOne
-    private User user;
+	private String username;
 
-    private Boolean liked;
+	private LocalDateTime votedAt;
+
+	public Vote() {}
+
+	public Vote(Long parameterId, String username) {
+		this.parameterId = parameterId;
+		this.username = username;
+		this.votedAt = LocalDateTime.now();
+	}
 
 	public Long getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public Long getParameterId() {
+		return parameterId;
 	}
 
-	public Parameter getParameter() {
-		return parameter;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setParameter(Parameter parameter) {
-		this.parameter = parameter;
+	public LocalDateTime getVotedAt() {
+		return votedAt;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public Boolean getLiked() {
-		return liked;
-	}
-
-	public void setLiked(Boolean liked) {
-		this.liked = liked;
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof Vote vote)) return false;
+        return Objects.equals(id, vote.id);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(parameter, id, liked, user);
+		return Objects.hashCode(id);
 	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Vote other = (Vote) obj;
-		return Objects.equals(parameter, other.parameter)
-				&& Objects.equals(id, other.id)
-				&& Objects.equals(liked, other.liked)
-				&& Objects.equals(user, other.user);
-	}
-    
 }

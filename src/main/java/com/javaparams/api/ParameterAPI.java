@@ -31,6 +31,5 @@ public class ParameterAPI {
 	public List<Parameter> findWithLikes() {
 		return parameterRepository.findByTotalLikesGreaterThan(0);
 	}
-	
 
 }
